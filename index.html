@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Entre em contato com a Fast Homes e converse com nossos consultores especializados. Solicite seu catálogo gratuito de casas.">
+    <meta name="keywords" content="fast homes, casas, construção, consultoria, catálogo, imóveis">
+    <meta name="author" content="Fast Homes">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="Fast Homes - Converse com um Consultor">
+    <meta property="og:description"
+        content="Entre em contato com nossos consultores especializados e solicite seu catálogo gratuito.">
+    <meta property="og:image" content="">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="">
+    <meta property="twitter:title" content="Fast Homes - Converse com um Consultor">
+    <meta property="twitter:description"
+        content="Entre em contato com nossos consultores especializados e solicite seu catálogo gratuito.">
+    <meta property="twitter:image" content="">
+
+    <title>Formulário | Fast Homes</title>
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+    <!-- Splide CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css">
+
+    <!-- Google Fonts -->
+
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="src/style.css">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <style>
+        /* Critical CSS inline for faster loading */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .background-carousel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Background Carousel -->
+    <div class="background-carousel">
+        <div class="splide" id="background-splide">
+            <div class="splide__track">
+                <ul class="splide__list">
+                    <li class="splide__slide"
+                        style="background-image: url('https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/2b161d3d-9737-4708-9998-ce06bac81f00/public')">
+                    </li>
+                    <li class="splide__slide"
+                        style="background-image: url('https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/51db3bc6-89d7-49e4-2849-5292474c5100/public')">
+                    </li>
+                    <li class="splide__slide"
+                        style="background-image: url('https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/4d0b086a-889e-4f60-82e6-f10dd645e300/public')">
+                    </li>
+                    <li class="splide__slide"
+                        style="background-image: url('https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/df33b748-1460-46a4-e7cd-e8c9008e9000/public')">
+                    </li>
+                    <li class="splide__slide"
+                        style="background-image: url('https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/6f7f563f-30a6-4204-ff87-6f7651316a00/public')">
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="form-container">
+            <div class="logo-container">
+                <img src="https://imagedelivery.net/1n9Gwvykoj9c9m8C_4GsGA/28cf333a-365a-4025-f8d8-c86fdd742d00/public"
+                    alt="Fast Homes" class="form-logo">
+            </div>
+
+            <div class="form-header">
+                <h1 class="form-title">Catálogo Fast Homes</h1>
+                <p class="form-subtitle">
+                    Preencha os dados abaixo e receba acesso exclusivo ao nosso catálogo de casas.
+                </p>
+            </div>
+
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Nome completo</label>
+                    <div>
+                        <input type="text" id="name" placeholder="Digite seu nome completo" required>
+                        <i class="validation-icon fas" id="nameIcon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <div>
+                        <input type="email" id="email" placeholder="seu@email.com" required>
+                        <i class="validation-icon fas" id="emailIcon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <div>
+                        <input type="tel" id="phone" placeholder="(00) 00000-0000" required>
+                        <i class="validation-icon fas" id="phoneIcon"></i>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button" id="submitButton">
+                    <span class="button-text">Acessar catálogo exclusivo</span>
+                    <i class="button-icon fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="form-footer">
+                <p class="privacy-text">
+                    Seus dados estão protegidos. Consulte nossa
+                    <a href="https://www.fasthomes.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Splide JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="src/script.js"></script>
+
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Fast Homes",
+        "description": "Especialista em construção de casas de alta qualidade",
+        "url": "",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "description": "Entre em contato para mais informações"
+        }
+    }
+    </script>
+</body>
+
+</html>

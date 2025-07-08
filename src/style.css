@@ -1,0 +1,551 @@
+/* Fast Homes - High Ticket Landing Page */
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #000000;
+    --accent-color: #000000;
+    --accent-hover: #333333;
+    --success-color: #22c55e;
+    --danger-color: #ef4444;
+    --text-primary: #000000;
+    --text-secondary: #4a4a4a;
+    --text-muted: #737373;
+    --border-color: #d4d4d4;
+    --border-focus: #000000;
+    --background-white: #ffffff;
+    --background-overlay: rgba(255, 255, 255, 0.98);
+    --background-gray: #f5f5f5;
+    --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.1);
+    --shadow-heavy: 0 25px 50px rgba(0, 0, 0, 0.15);
+    --border-radius: 12px;
+    --border-radius-large: 24px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: all 0.15s ease;
+}
+
+body {
+    font-family: "Urbanist", sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+    background: #f8fafc;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Background Carousel */
+.background-carousel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+}
+
+.splide__slide {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 100vh;
+    position: relative;
+}
+
+.splide__slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+    z-index: 1;
+}
+
+/* Main Container */
+.main-container {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+/* Form Container - High Ticket Design */
+.form-container {
+    background: var(--background-overlay);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 10px;
+    padding: 2rem;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: var(--shadow-heavy);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+.form-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #000000, #333333, #000000);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(60px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes shimmer {
+
+    0%,
+    100% {
+        transform: translateX(-100%);
+    }
+
+    50% {
+        transform: translateX(100%);
+    }
+}
+
+/* Logo */
+.logo-container {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    animation: fadeInDown 0.6s ease-out 0.2s both;
+}
+
+.form-logo {
+    height: 45px;
+    filter: brightness(0) saturate(100%);
+    opacity: 0.9;
+    transition: var(--transition);
+}
+
+.form-logo:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Form Header */
+.form-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.form-title {
+    color: var(--text-primary);
+    font-size: 2.25rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    animation: fadeInUp 0.6s ease-out 0.3s both;
+}
+
+.form-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1;
+    opacity: 0.8;
+    font-weight: 300;
+    max-width: 400px;
+    margin: 0 auto;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+}
+
+/* Form Styles */
+.contact-form {
+    animation: fadeInUp 0.6s ease-out 0.5s both;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+.form-group:nth-child(1) {
+    animation-delay: 0.6s;
+}
+
+.form-group:nth-child(2) {
+    animation-delay: 0.7s;
+}
+
+.form-group:nth-child(3) {
+    animation-delay: 0.8s;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.form-group div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 400;
+    background: var(--background-white);
+    color: var(--text-primary);
+    font-family: inherit;
+    letter-spacing: -0.01em;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+}
+
+.form-group input::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+.form-group input:hover:not(:focus) {
+    border-color: #a3a3a3;
+}
+
+.form-group input.valid {
+    border-color: var(--success-color);
+    background: rgba(34, 197, 94, 0.02);
+}
+
+.form-group input.invalid {
+    border-color: var(--danger-color);
+    background: rgba(239, 68, 68, 0.02);
+}
+
+/* Validation Icons */
+.validation-icon {
+    font-size: 1rem;
+    opacity: 0;
+    transition: var(--transition);
+    position: absolute;
+    right: 20px;
+}
+
+.validation-icon.valid {
+    color: var(--success-color);
+    opacity: 1;
+    transform: scale(1);
+    animation: bounceIn 0.4s ease-out;
+}
+
+.validation-icon.invalid {
+    color: var(--danger-color);
+    opacity: 1;
+    transform: scale(1);
+    animation: shakeX 0.4s ease-out;
+}
+
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes shakeX {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+/* Submit Button - Premium Design */
+.submit-button {
+    width: 100%;
+    background: linear-gradient(135deg, #000000, #333333);
+    color: var(--background-white);
+    border: none;
+    padding: 1.4rem 2rem;
+    border-radius: 3px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    position: relative;
+    overflow: hidden;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    letter-spacing: -0.01em;
+    animation: fadeInUp 0.6s ease-out 0.9s both;
+}
+
+.submit-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.submit-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #333333, #555555);
+}
+
+.submit-button:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.submit-button:active {
+    transform: translateY(-1px);
+}
+
+.submit-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.button-icon {
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+
+.submit-button:hover:not(:disabled) .button-icon {
+    transform: translateX(4px);
+}
+
+/* Loading State */
+.spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--background-white);
+    animation: spin 1s linear infinite;
+    margin-right: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Form Footer */
+.form-footer {
+    margin-top: 2.5rem;
+    text-align: center;
+    animation: fadeInUp 0.6s ease-out 1s both;
+}
+
+.privacy-text {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.privacy-text a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition-fast);
+}
+
+.privacy-text a:hover {
+    text-decoration: underline;
+    color: var(--text-secondary);
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Success/Error Messages */
+.form-message {
+    padding: 1.25rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.95rem;
+    animation: slideDown 0.4s ease-out;
+    position: relative;
+    overflow: hidden;
+}
+
+.form-message.success {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+    color: #059669;
+    border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.form-message.error {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 100px;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 1rem;
+    }
+
+    .form-container {
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        margin: 1rem 0;
+    }
+
+    .form-title {
+        font-size: 1.875rem;
+    }
+
+    .form-subtitle {
+        font-size: 1rem;
+    }
+
+    .form-group input {
+        padding: 1.125rem 3rem 1.125rem 1.125rem;
+    }
+
+    .submit-button {
+        padding: 1.25rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 2.5rem 1.5rem;
+    }
+
+    .form-title {
+        font-size: 1.625rem;
+    }
+
+    .form-subtitle {
+        font-size: 0.95rem;
+    }
+}
+
+/* Hide Splide controls */
+.splide__arrows,
+.splide__pagination {
+    display: none !important;
+}
+
+/* Focus visible improvements */
+.form-group input:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+.submit-button:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
