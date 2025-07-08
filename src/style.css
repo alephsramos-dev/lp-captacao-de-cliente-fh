@@ -81,6 +81,10 @@ body {
     align-items: center;
     justify-content: center;
     padding: 2rem;
+
+    @media (max-width: 768px){
+        max-height: 100vh;    
+    }
 }
 
 /* Form Container - High Ticket Design */
@@ -96,6 +100,10 @@ body {
     position: relative;
     animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
+
+    @media (max-width: 768px){
+        border-radius: 5px!important;    
+    }
 }
 
 .form-container::before {
@@ -138,6 +146,10 @@ body {
     text-align: center;
     margin-bottom: 2.5rem;
     animation: fadeInDown 0.6s ease-out 0.2s both;
+
+    @media (max-width: 768px){
+        margin-bottom: 1.5rem;    
+    }
 }
 
 .form-logo {
@@ -145,6 +157,10 @@ body {
     filter: brightness(0) saturate(100%);
     opacity: 0.9;
     transition: var(--transition);
+
+    @media (max-width: 768px){
+        height: 35px;    
+    }
 }
 
 .form-logo:hover {
@@ -156,6 +172,10 @@ body {
 .form-header {
     text-align: center;
     margin-bottom: 3rem;
+
+    @media (max-width: 768px){
+        margin-bottom: 2rem;    
+    }
 }
 
 .form-title {
@@ -166,6 +186,10 @@ body {
     letter-spacing: -0.025em;
     line-height: 1.2;
     animation: fadeInUp 0.6s ease-out 0.3s both;
+
+    @media (max-width: 768px){
+        font-size: 1.8rem!important;    
+    }
 }
 
 .form-subtitle {
@@ -177,6 +201,10 @@ body {
     max-width: 400px;
     margin: 0 auto;
     animation: fadeInUp 0.6s ease-out 0.4s both;
+
+    @media (max-width: 768px){
+        font-size: 0.9rem!important;    
+    }
 }
 
 /* Form Styles */
@@ -188,6 +216,10 @@ body {
     margin-bottom: 1.5rem;
     position: relative;
     animation: fadeInUp 0.6s ease-out both;
+
+    @media (max-width: 768px){
+        margin-bottom: 1rem;    
+    }
 }
 
 .form-group:nth-child(1) {
@@ -209,6 +241,10 @@ body {
     font-weight: 500;
     font-size: 0.95rem;
     letter-spacing: -0.01em;
+
+    @media (max-width: 768px){
+        font-size: 0.8rem;    
+    }
 }
 
 .form-group div {
@@ -233,6 +269,11 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    @media (max-width: 768px){
+        padding: 0.8rem!important;
+        font-size: 0.9rem;    
+    }
     
 }
 
@@ -332,6 +373,10 @@ body {
     gap: 1rem;
     letter-spacing: -0.01em;
     animation: fadeInUp 0.6s ease-out 0.9s both;
+
+    @media (max-width: 768px){
+        padding: 1rem 1.5rem!important;    
+    }
 }
 
 .submit-button::before {
@@ -396,12 +441,17 @@ body {
     margin-top: 2.5rem;
     text-align: center;
     animation: fadeInUp 0.6s ease-out 1s both;
+
+    @media (max-width: 768px){
+        margin-top: 1rem;    
+    }
 }
 
 .privacy-text {
     color: var(--text-muted);
     font-size: 0.875rem;
-    line-height: 1.5;
+    line-height: 1;
+    
 }
 
 .privacy-text a {
