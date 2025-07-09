@@ -34,13 +34,22 @@ class FastHomesForm {
     setupEventListeners() {
         // Form validation listeners with debouncing for better performance
         this.nameInput.addEventListener('input', this.debounce(() => this.handleNameInput(), 300));
-        this.nameInput.addEventListener('blur', () => this.validateName());
+        this.nameInput.addEventListener('blur', () => {
+            const isValid = this.validateName();
+            this.updateValidation('name', isValid);
+        });
 
         this.emailInput.addEventListener('input', this.debounce(() => this.handleEmailInput(), 300));
-        this.emailInput.addEventListener('blur', () => this.validateEmail());
+        this.emailInput.addEventListener('blur', () => {
+            const isValid = this.validateEmail();
+            this.updateValidation('email', isValid);
+        });
 
         this.phoneInput.addEventListener('input', () => this.handlePhoneInput());
-        this.phoneInput.addEventListener('blur', () => this.validatePhone());
+        this.phoneInput.addEventListener('blur', () => {
+            const isValid = this.validatePhone();
+            this.updateValidation('phone', isValid);
+        });
 
         // Form submission
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
@@ -115,7 +124,8 @@ class FastHomesForm {
         this.formData.name = value;
 
         if (value.length > 0) {
-            this.validateName();
+            const isValid = this.validateName();
+            this.updateValidation('name', isValid);
         } else {
             this.clearValidation('name');
         }
@@ -126,7 +136,8 @@ class FastHomesForm {
         this.formData.email = value;
 
         if (value.length > 0) {
-            this.validateEmail();
+            const isValid = this.validateEmail();
+            this.updateValidation('email', isValid);
         } else {
             this.clearValidation('email');
         }
@@ -140,7 +151,8 @@ class FastHomesForm {
         this.formData.phone = formattedPhone;
 
         if (value.length > 0) {
-            this.validatePhone();
+            const isValid = this.validatePhone();
+            this.updateValidation('phone', isValid);
         } else {
             this.clearValidation('phone');
         }
@@ -167,7 +179,6 @@ class FastHomesForm {
         const name = this.nameInput.value.trim();
         const isValid = name.length >= 2 && /^[a-zA-ZÀ-ÿ\s'-]+$/.test(name);
 
-        this.updateValidation('name', isValid);
         return isValid;
     }
 
@@ -176,7 +187,6 @@ class FastHomesForm {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const isValid = emailRegex.test(email) && email.length <= 254;
 
-        this.updateValidation('email', isValid);
         return isValid;
     }
 
@@ -187,7 +197,6 @@ class FastHomesForm {
         // Validate Brazilian mobile phone (11 digits)
         const isValid = cleanPhone.length === 11 && /^[1-9]{2}9[0-9]{8}$/.test(cleanPhone);
 
-        this.updateValidation('phone', isValid);
         return isValid;
     }
 
@@ -230,7 +239,11 @@ class FastHomesForm {
     }
 
     updateSubmitButton() {
-        const isFormValid = this.validateAll();
+        const nameValid = this.validateName();
+        const emailValid = this.validateEmail();
+        const phoneValid = this.validatePhone();
+        const isFormValid = nameValid && emailValid && phoneValid;
+        
         this.submitButton.disabled = !isFormValid || this.loading;
 
         if (isFormValid && !this.loading) {
@@ -363,7 +376,7 @@ class FastHomesForm {
     }
 
     handleSubmitSuccess() {
-        this.showMessage('Dados enviados com sucesso! Redirecionando para o catálogo...', 'success');
+        this.showMessage('Dados enviados com sucesso!', 'success');
 
         // Track conversion
         this.trackConversion();
@@ -371,10 +384,10 @@ class FastHomesForm {
         // Reset form with animation
         this.resetFormWithAnimation();
 
-        // Redirect to catalog after 2 seconds
+        // Show success modal instead of redirecting
         setTimeout(() => {
-            this.redirectToCatalog();
-        }, 2000);
+            this.showSuccessModal();
+        }, 1000);
     }
 
     handleSubmitError(error) {
@@ -407,15 +420,56 @@ class FastHomesForm {
         }, 800);
     }
 
-    redirectToCatalog() {
-        // Track catalog access
-        this.trackCatalogAccess();
+    // redirectToCatalog() {
+    //     // Track catalog access
+    //     this.trackCatalogAccess();
 
-        // Open catalog in new window/tab
-        window.open(this.catalogUrl, '_blank');
+    //     // Open catalog in new window/tab
+    //     window.open(this.catalogUrl, '_blank');
 
-        // Show confirmation message
-        this.showMessage('Catálogo aberto! Verifique a nova aba do seu navegador.', 'success');
+    //     // Show confirmation message
+    //     this.showMessage('Catálogo aberto! Verifique a nova aba do seu navegador.', 'success');
+    // }
+
+    // Modal methods
+    showSuccessModal() {
+        const modal = document.getElementById('successModal');
+        if (modal) {
+            modal.classList.add('show');
+            
+            // Focus management for accessibility
+            const closeBtn = modal.querySelector('.modal-close-btn');
+            if (closeBtn) {
+                closeBtn.focus();
+            }
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+            
+            // Add escape key listener
+            this.escapeKeyListener = (e) => {
+                if (e.key === 'Escape') {
+                    this.closeModal();
+                }
+            };
+            document.addEventListener('keydown', this.escapeKeyListener);
+        }
+    }
+
+    closeModal() {
+        const modal = document.getElementById('successModal');
+        if (modal) {
+            modal.classList.remove('show');
+            
+            // Restore body scroll
+            document.body.style.overflow = '';
+            
+            // Remove escape key listener
+            if (this.escapeKeyListener) {
+                document.removeEventListener('keydown', this.escapeKeyListener);
+                this.escapeKeyListener = null;
+            }
+        }
     }
 
     shakeForm() {
@@ -450,18 +504,18 @@ class FastHomesForm {
         console.log('High ticket conversion tracked');
     }
 
-    trackCatalogAccess() {
-        // Track catalog download/access
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'download', {
-                'event_category': 'engagement',
-                'event_label': 'catalogo-premium-pdf',
-                'value': 1
-            });
-        }
+    // trackCatalogAccess() {
+    //     // Track catalog download/access
+    //     if (typeof gtag !== 'undefined') {
+    //         gtag('event', 'download', {
+    //             'event_category': 'engagement',
+    //             'event_label': 'catalogo-premium-pdf',
+    //             'value': 1
+    //         });
+    //     }
 
-        console.log('Catalog access tracked');
-    }
+    //     console.log('Catalog access tracked');
+    // }
 
     setLoading(loading) {
         this.loading = loading;
@@ -546,4 +600,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     console.log(`Fast Homes High Ticket Landing Page loaded successfully`);
+});
+
+// Global function to close modal (called from HTML)
+function closeModal() {
+    if (window.fastHomesForm) {
+        window.fastHomesForm.closeModal();
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('successModal');
+    if (modal && e.target === modal) {
+        closeModal();
+    }
 });

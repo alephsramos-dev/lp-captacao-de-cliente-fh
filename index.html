@@ -150,7 +150,7 @@
                 </div>
 
                 <button type="submit" class="submit-button" id="submitButton">
-                    <span class="button-text">Acessar catálogo exclusivo</span>
+                    <span class="button-text">Receber Catálogo</span>
                     <svg enable-background="new 0 0 64 64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" id="fi_5868472"><g id="right"><path d="m58.76 31.256-12.047-10.813c-.412-.37-1.044-.335-1.412.076-.369.411-.335 1.043.076 1.412l10.103 9.069h-49.572c-.552 0-1 .448-1 1s.448 1 1 1h49.572l-10.104 9.068c-.411.369-.445 1.001-.076 1.412.197.22.47.332.745.332.238 0 .477-.084.667-.256l12.048-10.812c.211-.189.332-.46.332-.744s-.121-.555-.332-.744z"></path></g></svg>
                 </button>
             </form>
@@ -160,6 +160,44 @@
                     Seus dados estão protegidos. Consulte nossa
                     <a href="https://www.fasthomes.com.br/politica-de-privacidade" target="_blank">Política de Privacidade</a>.
                 </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Sucesso -->
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="30" fill="#22c55e" fill-opacity="0.1"/>
+                        <circle cx="30" cy="30" r="20" fill="#22c55e"/>
+                        <path d="M23 29L27 33L37 23" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h2 class="modal-title">Solicitação enviada com sucesso!</h2>
+                <p class="modal-subtitle">Seu catálogo exclusivo será enviado para o seu e-mail em alguns instantes.</p>
+            </div>
+            <div class="modal-body">
+                <div class="modal-info">
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Verifique sua caixa de entrada</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Envio em até 2 minutos</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <span>Nosso consultor entrará em contato</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-close-btn" onclick="closeModal()">
+                    <span>Entendi</span>
+                </button>
             </div>
         </div>
     </div>
