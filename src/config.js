@@ -31,7 +31,7 @@ const ACTIVE_CAMPAIGN_CONFIG = {
     FORM_CONFIG: {
         LIST_ID: 1,           // ID da lista no AC
         FORM_ID: 1,           // ID do formulário no AC  
-        ACTION: 'subscribe',  // Ação: subscribe (corrigido)
+        ACTION: 'sub',        // Ação: subscribe
         VERSION: 2            // Versão da API de formulários
     },
 

@@ -43,119 +43,13 @@ class FastHomesForm {
         this.validateAll();
         console.log('Fast Homes High Ticket Form initialized');
         console.log("***** Integração TRIPLA INICIADA: PipeRun + ActiveCampaign + Google Apps Script ***********");
-        
-        // Função de teste disponível no console
-        window.verificarIntegracaoTag = () => {
-            console.log('🔍 VERIFICAÇÃO RÁPIDA DA INTEGRAÇÃO');
-            console.log('===================================');
-            const config = window.ACTIVE_CAMPAIGN_CONFIG;
-            console.log('✅ URL ActiveCampaign:', config.BASE_URL);
-            console.log('✅ Tag configurada:', config.TAG_NAME);
-            console.log('✅ API Key:', config.API_KEY ? 'configurada' : 'não configurada');
-            console.log('');
-            console.log('🎯 COMO VERIFICAR SE A TAG FOI APLICADA:');
-            console.log('1. Preencha e envie o formulário');
-            console.log('2. Acesse o ActiveCampaign');
-            console.log('3. Procure pelo contato usando o email');
-            console.log(`4. Verifique se a tag "${config.TAG_NAME}" está aplicada`);
-            console.log('');
-            console.log('💡 Digite verificarIntegracaoTag() para ver esta informação novamente');
-        };
-
-        // Função para testar backend Turbo Cloud
-        window.testarBackendTurbo = async () => {
-            console.log('🧪 TESTANDO BACKEND TURBO CLOUD');
-            console.log('=================================');
-            
-            const backendUrl = 'http://fasthomesac.fastsistemasconstrutivos.com.br';
-            
-            try {
-                // Teste 1: Verificar se está online
-                console.log('🔄 Verificando se backend está online...');
-                const testResponse = await fetch(`${backendUrl}/api/test`);
-                
-                if (testResponse.ok) {
-                    const testData = await testResponse.json();
-                    console.log('✅ Backend está online!', testData);
-                } else {
-                    console.log('❌ Backend não respondeu:', testResponse.status);
-                    return;
-                }
-
-                // Teste 2: Envio de lead
-                console.log('🔄 Testando envio de lead...');
-                const leadData = {
-                    name: 'Teste Frontend',
-                    email: `teste-frontend-${Date.now()}@fasthomes.com.br`,
-                    phone: '(11) 99999-7777',
-                    utm_source: 'teste-frontend',
-                    utm_medium: 'navegador',
-                    utm_campaign: 'teste-backend',
-                    utm_term: '',
-                    utm_content: '',
-                    page_referrer: window.location.href
-                };
-
-                const leadResponse = await fetch(`${backendUrl}/api/activecampaign-with-tag`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(leadData)
-                });
-
-                if (leadResponse.ok) {
-                    const result = await leadResponse.json();
-                    console.log('🎉 TESTE CONCLUÍDO COM SUCESSO!', result);
-                    
-                    if (result.tag && result.tag.applied) {
-                        console.log(`🎯 Tag "${result.tag.name}" aplicada com sucesso!`);
-                        console.log('🏆 BACKEND 100% FUNCIONAL!');
-                    }
-                } else {
-                    console.log('❌ Erro no envio:', await leadResponse.text());
-                }
-
-            } catch (error) {
-                console.error('❌ Erro no teste:', error);
-                console.log('💡 Verifique se o backend foi deployado no Turbo Cloud');
-            }
-        };
-        
-        // Mostrar informação inicial
-        setTimeout(() => {
-            console.log('');
-            console.log('🎯 TAG ACTIVECAMPAIGN CONFIGURADA!');
-            console.log(`Tag a ser aplicada: "${window.ACTIVE_CAMPAIGN_CONFIG.TAG_NAME}"`);
-            console.log('');
-            console.log('🧪 COMANDOS DE TESTE DISPONÍVEIS:');
-            console.log('- verificarIntegracaoTag() - Informações gerais');
-            console.log('- testarBackendTurbo() - Testar backend Turbo Cloud');
-            console.log('');
-            console.log('🚀 Backend configurado: fasthomesac.fastsistemasconstrutivos.com.br');
-        }, 1000);
     }
 
     setupActiveCampaignCallback() {
-        // Funções auxiliares do ActiveCampaign para evitar erros
-        window._show_error = function(message) {
-            if (Array.isArray(message) && message.length === 0) {
-                // Ignorar arrays vazios (avisos menores do AC)
-                return;
-            }
-            console.warn("⚠️ ActiveCampaign Error:", message);
-        };
-
-        window._show_thank_you = function(id, message, trackcmp_url, email) {
-            console.log("✅ ActiveCampaign Success:", { id, message, email });
-            console.log(`🎯 Tag "${window.ACTIVE_CAMPAIGN_CONFIG.TAG_NAME}" aplicada via proc.php!`);
-        };
-
         // Interceptar callback do ActiveCampaign para confirmação
         const _origShowThankYou = window._show_thank_you;
         window._show_thank_you = function (id, message, trackcmp_url, email) {
             console.log("✅ ActiveCampaign callback disparado:", { id, message, email });
-            console.log(`🎯 Tag "${window.ACTIVE_CAMPAIGN_CONFIG.TAG_NAME}" aplicada com sucesso!`);
             return _origShowThankYou && _origShowThankYou.apply(this, arguments);
         };
     }
@@ -566,7 +460,7 @@ class FastHomesForm {
             's': config.FORM_CONFIG.LIST_ID,    // List ID  
             'c': config.FORM_CONFIG.VERSION,    // Version
             'm': config.FORM_CONFIG.LIST_ID,    // List ID (duplicated for compatibility)
-            'act': config.FORM_CONFIG.ACTION,   // Action (subscribe)
+            'act': config.FORM_CONFIG.ACTION,   // Action
             'v': config.FORM_CONFIG.VERSION,    // Version (duplicated)
             'or': window.location.href,         // Origin URL
             'tags[]': config.TAG_NAME           // Tag a ser aplicada
@@ -587,146 +481,57 @@ class FastHomesForm {
         });
 
         console.log("📋 Campos do formulário preparados para ActiveCampaign");
-        
-        // Log para debug: mostrar todos os campos que serão enviados
-        const allInputs = this.form.querySelectorAll('input');
-        console.log("🔍 DEBUG: Todos os campos do formulário:");
-        allInputs.forEach(input => {
-            if (input.name && input.value) {
-                console.log(`  - ${input.name}: ${input.value}`);
-            }
-        });
-    }    async sendToActiveCampaignWithTag() {
+    }
+
+    async sendToActiveCampaignWithTag() {
         console.log("🔄 Enviando para ActiveCampaign com aplicação de tag...");
-        
-        // Primeiro tentar backend Node.js (se disponível)
-        const backendSuccess = await this.tryBackendIntegration();
-        
-        if (backendSuccess) {
-            console.log("✅ Integração via backend concluída com sucesso!");
-            return;
-        }
-        
-        // Fallback: método proc.php original
-        console.log("🔄 Usando método proc.php como fallback...");
+
+        // 1. PRIMEIRO: Enviar via proc.php (método que funciona)
         this.sendToActiveCampaign();
-        
-        // Tentar aplicar tag via API (método original)
+
+        // 2. SEGUNDO: Aplicar tag via API (se configurada)
         const config = window.ACTIVE_CAMPAIGN_CONFIG;
         if (config.API_KEY) {
-            this.tryApplyTagViaAPI().catch(error => {
-                console.log("💡 Tag aplicada via proc.php (API bloqueada por CORS):", error.message);
-            });
-        } else {
-            console.log("📝 Tag será aplicada via proc.php (API_KEY não configurada)");
-        }
-    }
-
-    async tryBackendIntegration() {
-        // URLs possíveis do backend
-        const backendUrls = [
-            'http://fasthomesac.fastsistemasconstrutivos.com.br/api/activecampaign-with-tag', // Turbo Cloud
-            'http://localhost:3001/api/activecampaign-with-tag' // Local (desenvolvimento)
-        ];
-
-        const leadData = {
-            name: this.nameInput.value,
-            email: this.emailInput.value,
-            phone: this.phoneInput.value,
-            utm_source: this.getUtmParams().utm_source,
-            utm_medium: this.getUtmParams().utm_medium,
-            utm_campaign: this.getUtmParams().utm_campaign,
-            utm_term: this.getUtmParams().utm_term,
-            utm_content: this.getUtmParams().utm_content,
-            page_referrer: document.referrer || "Acesso direto"
-        };
-
-        for (const url of backendUrls) {
             try {
-                console.log(`🔄 Tentando backend: ${url}`);
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(leadData),
-                    timeout: 5000 // 5 segundos de timeout
-                });
+                console.log("🎯 Aplicando tag via API...");
 
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log("✅ Backend respondeu:", result);
-                    
-                    if (result.success && result.tag && result.tag.applied) {
-                        console.log(`🎯 Tag "${result.tag.name}" aplicada com sucesso via backend!`);
-                        console.log(`👤 Contato ID: ${result.contact.id}`);
-                        return true;
-                    }
+                // Aguardar um pouco para o contato ser criado via proc.php
+                await new Promise(resolve => setTimeout(resolve, 2000));
+
+                const tagManager = new window.ActiveCampaignTagManager(config);
+
+                // Dados do contato atual
+                const contactData = {
+                    email: this.emailInput.value,
+                    firstName: this.nameInput.value.split(' ')[0] || '',
+                    lastName: this.nameInput.value.split(' ').slice(1).join(' ') || '',
+                    phone: this.phoneInput.value
+                };
+
+                // Aplicar a tag
+                const result = await tagManager.processContactWithTag(
+                    contactData,
+                    config.TAG_NAME,
+                    'Tag aplicada automaticamente após envio do formulário'
+                );
+
+                if (result.success) {
+                    console.log(`✅ Tag "${config.TAG_NAME}" aplicada com sucesso!`);
+                    console.log(`👤 Contato: ${contactData.email} (ID: ${result.contact.id})`);
+                } else {
+                    console.warn(`⚠️ Falha ao aplicar tag: ${result.error}`);
                 }
+
             } catch (error) {
-                console.log(`⚠️ Backend ${url} não disponível:`, error.message);
-                continue;
+                console.warn("⚠️ Erro ao aplicar tag via API (contato foi criado via proc.php):", error.message);
             }
-        }
-
-        console.log("⚠️ Nenhum backend disponível, usando fallback");
-        return false;
-    }
-
-    getUtmParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return {
-            utm_source: urlParams.get('utm_source') || 'organico',
-            utm_medium: urlParams.get('utm_medium') || '',
-            utm_campaign: urlParams.get('utm_campaign') || '',
-            utm_content: urlParams.get('utm_content') || '',
-            utm_term: urlParams.get('utm_term') || ''
-        };
-    }
-
-    async tryApplyTagViaAPI() {
-        console.log("🎯 Tentando aplicar tag via API...");
-        
-        // Verificar se o email está preenchido
-        if (!this.emailInput.value || !this.emailInput.value.trim()) {
-            console.log("⚠️ Email não encontrado para aplicação via API");
-            return;
-        }
-        
-        // Aguardar um pouco para o contato ser criado via proc.php
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        
-        const config = window.ACTIVE_CAMPAIGN_CONFIG;
-        const tagManager = new window.ActiveCampaignTagManager(config);
-        
-        // Dados do contato atual
-        const contactData = {
-            email: this.emailInput.value.trim(),
-            firstName: this.nameInput.value.split(' ')[0] || '',
-            lastName: this.nameInput.value.split(' ').slice(1).join(' ') || '',
-            phone: this.phoneInput.value
-        };
-        
-        // Aplicar a tag
-        const result = await tagManager.processContactWithTag(
-            contactData,
-            config.TAG_NAME,
-            'Tag aplicada automaticamente após envio do formulário'
-        );
-        
-        if (result.success) {
-            console.log(`✅ Tag "${config.TAG_NAME}" aplicada com sucesso via API!`);
-            console.log(`👤 Contato: ${contactData.email} (ID: ${result.contact.id})`);
         } else {
-            throw new Error(result.error);
+            console.log("📝 API_KEY não configurada - tag não aplicada automaticamente");
+            console.log("💡 Configure API_KEY em config.js para aplicação automática de tags");
         }
     }
 
     sendToActiveCampaign() {
-        // Primeiro, adicionar os campos básicos do formulário
-        this.addBasicFormFields();
-        
         // Usar o método proc.php que funciona (contorna CORS)
         const serialized = this.formSerialize(this.form).replace(/%0A/g, "\\n");
         const url = "https://fastdrywall80017.activehosted.com/proc.php?" + serialized + "&jsonp=true";
@@ -744,10 +549,10 @@ class FastHomesForm {
                 console.log("✅ ActiveCampaign: Script proc.php carregado com sucesso");
             };
             script.onerror = (error) => {
-                console.warn("⚠️ ActiveCampaign: Script proc.php teve problemas, mas o envio pode ter funcionado");
-                console.log("🔍 URL tentada:", url);
-                console.log("� Verifique o ActiveCampaign para confirmar se o lead foi recebido");
-                console.log("🎯 Tag programada:", window.ACTIVE_CAMPAIGN_CONFIG.TAG_NAME);
+                console.error("❌ ActiveCampaign: Falha ao carregar script proc.php");
+                console.error("🔍 URL tentada:", url);
+                console.error("📝 Isso pode indicar problema de CORS ou conectividade");
+                console.error("💡 O contato pode ter sido criado mesmo com este erro");
             };
             document.head.appendChild(script);
             console.log("📤 ActiveCampaign: Script proc.php enviado");
@@ -956,17 +761,6 @@ class FastHomesForm {
     handleSubmitSuccess() {
         this.showMessage('Dados enviados com sucesso!', 'success');
 
-        // Informações sobre a tag
-        const config = window.ACTIVE_CAMPAIGN_CONFIG;
-        console.log('🎯 RESUMO DA INTEGRAÇÃO:');
-        console.log('========================');
-        console.log('✅ PipeRun: Lead enviado');
-        console.log('✅ ActiveCampaign: Contato criado via proc.php');
-        console.log(`🏷️ Tag programada: "${config.TAG_NAME}"`);
-        console.log('✅ Google Apps Script: Dados enviados');
-        console.log('📧 Email do contato:', this.emailInput.value);
-        console.log('💡 Verifique no ActiveCampaign se a tag foi aplicada');
-
         // Track conversion
         this.trackConversion();
 
@@ -1139,31 +933,6 @@ class FastHomesForm {
                 setTimeout(() => message.remove(), 300);
             }
         }, 5000);
-    }
-
-    addBasicFormFields() {
-        // Adicionar campos básicos do formulário que são obrigatórios para o ActiveCampaign
-        const basicFields = {
-            'email': this.emailInput.value,
-            'firstname': this.nameInput.value.split(' ')[0] || '',
-            'lastname': this.nameInput.value.split(' ').slice(1).join(' ') || '',
-            'phone': this.phoneInput.value,
-            'fullname': this.nameInput.value
-        };
-
-        Object.entries(basicFields).forEach(([fieldName, value]) => {
-            if (value && value.trim()) {
-                let input = this.form.querySelector(`input[name="${fieldName}"]`);
-                if (!input) {
-                    input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = fieldName;
-                    input.value = value.trim();
-                    this.form.appendChild(input);
-                    console.log(`✅ Campo básico adicionado: ${fieldName} = ${value.trim()}`);
-                }
-            }
-        });
     }
 }
 
