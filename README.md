@@ -9,11 +9,23 @@ Uma landing page premium e minimalista para captação de leads high ticket com 
 - **Validação em tempo real** com animações elegantes
 - **Formatação automática** do número de telefone brasileiro
 - **Animações premium** com efeitos de entrada escalonados
-- **Redirecionamento automático** para catálogo após envio do formulário
+- **Modal de sucesso** com confirmação elegante
 - **Design responsivo** otimizado para conversão
-- **Integração com API** do Pipe.run para captura de leads premium
+- **Integração dupla** com Active Campaign + Pipe.run
+- **Tag automática** "catalogo-solicitado" no Active Campaign
 - **Tracking avançado** de UTMs e informações de dispositivo
 - **SEO otimizado** com meta tags completas
+
+## 🎯 **Integração com Active Campaign**
+
+O formulário agora envia os dados simultaneamente para:
+- **Active Campaign** (principal) - com tag "catalogo-solicitado"
+- **Pipe.run** (backup) - mantém a integração existente
+
+### Configuração Rápida
+1. Edite o arquivo `src/config.js`
+2. Substitua pela sua URL e API Key do Active Campaign
+3. Consulte o arquivo `ACTIVE_CAMPAIGN_SETUP.md` para instruções detalhadas
 
 ## 🚀 **Fluxo de Conversão**
 

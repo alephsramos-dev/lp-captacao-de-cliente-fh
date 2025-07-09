@@ -1,0 +1,21 @@
+{
+  "name": "activecampaign-backend",
+  "version": "1.0.0",
+  "description": "Backend para integração com ActiveCampaign e aplicação de tags",
+  "main": "backend-activecampaign-tag.js",
+  "scripts": {
+    "start": "node backend-activecampaign-tag.js",
+    "dev": "nodemon backend-activecampaign-tag.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.7",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["activecampaign", "api", "backend", "tags"],
+  "author": "Fast Homes",
+  "license": "MIT"
+}
