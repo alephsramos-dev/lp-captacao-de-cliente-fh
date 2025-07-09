@@ -13,8 +13,7 @@ const ACTIVE_CAMPAIGN_CONFIG = {
     API_URL: 'https://fastdrywall80017.api-us1.com',
     API_KEY: '26bced605b889cf36e760aefc67231ae3256429c1622218b0830a3a224b6e464dc4c0f4e',
     TAG_NAME: 'catalogo-fast-homes-solicitado',
-    LIST_ID: 1, // ID da lista "Leads"
-    LIST_NAME: 'Leads',
+    LIST_ID: 1,
     CUSTOM_FIELDS: {
         UTM_SOURCE: 6,
         UTM_MEDIUM: 7,
@@ -25,40 +24,8 @@ const ACTIVE_CAMPAIGN_CONFIG = {
     }
 };
 
-// Configuração CORS mais específica para resolver problemas de preflight
-const corsOptions = {
-    origin: [
-        'http://127.0.0.1:5500',
-        'http://localhost:5500', 
-        'https://127.0.0.1:5500',
-        'https://localhost:5500',
-        'https://fasthomesac.fastsistemasconstrutivos.com.br',
-        'http://fasthomesac.fastsistemasconstrutivos.com.br',
-        '*' // Para desenvolvimento - remover em produção
-    ],
-    methods: ['GET', 'POST', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-    credentials: true,
-    optionsSuccessStatus: 200 // Para suportar navegadores legados
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
-
-// Middleware adicional para CORS em todas as rotas
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
-    
-    // Responder a requisições OPTIONS (preflight)
-    if (req.method === 'OPTIONS') {
-        res.sendStatus(200);
-        return;
-    }
-    
-    next();
-});
 
 // Função para buscar ou criar uma tag
 async function findOrCreateTag(tagName) {
@@ -146,62 +113,6 @@ async function applyTagToContact(contactId, tagId) {
     }
 }
 
-// Função para adicionar contato à lista
-async function addContactToList(contactId, listId) {
-    const addToListUrl = `${ACTIVE_CAMPAIGN_CONFIG.API_URL}/api/3/contactLists`;
-    
-    const addToListData = {
-        contactList: {
-            list: listId,
-            contact: contactId,
-            status: 1 // 1 = active, 2 = unsubscribed
-        }
-    };
-
-    try {
-        console.log('Adicionando contato à lista...');
-        console.log('Contact ID:', contactId);
-        console.log('List ID:', listId);
-        
-        const response = await fetch(addToListUrl, {
-            method: 'POST',
-            headers: {
-                'Api-Token': ACTIVE_CAMPAIGN_CONFIG.API_KEY,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(addToListData)
-        });
-
-        const responseData = await response.text();
-        
-        if (response.ok) {
-            console.log('Contato adicionado à lista com sucesso');
-            return { success: true, data: responseData };
-        } else {
-            console.log('Erro ao adicionar à lista:', response.status, responseData);
-            return { success: false, error: responseData, status: response.status };
-        }
-    } catch (error) {
-        console.error('Erro na requisição de adicionar à lista:', error);
-        return { success: false, error: error.message };
-    }
-}
-
-// Função para construir mensagem de sucesso
-function buildSuccessMessage(tagResult, listResult) {
-    let message = 'Lead processado com sucesso!';
-    
-    if (tagResult && tagResult.success) {
-        message += ' Tag aplicada.';
-    }
-    
-    if (listResult && listResult.success) {
-        message += ' Adicionado à lista "Leads".';
-    }
-    
-    return message;
-}
-
 // Endpoint principal para receber leads
 app.post('/api/activecampaign-with-tag', async (req, res) => {
     const { name, email, phone, utm_source, utm_medium, utm_campaign, utm_term, utm_content, page_referrer } = req.body;
@@ -258,11 +169,7 @@ app.post('/api/activecampaign-with-tag', async (req, res) => {
         // 5. Aplicar tag ao contato
         const tagApplied = await applyTagToContact(contactId, tagId);
 
-        // 6. Adicionar contato à lista "Leads"
-        console.log(`📋 Adicionando contato à lista "${ACTIVE_CAMPAIGN_CONFIG.LIST_NAME}"...`);
-        const addedToList = await addContactToList(contactId, ACTIVE_CAMPAIGN_CONFIG.LIST_ID);
-
-        // 7. Resposta final
+        // 6. Resposta final
         const result = {
             success: true,
             contact: {
@@ -275,12 +182,9 @@ app.post('/api/activecampaign-with-tag', async (req, res) => {
                 name: ACTIVE_CAMPAIGN_CONFIG.TAG_NAME,
                 applied: tagApplied
             },
-            list: {
-                id: ACTIVE_CAMPAIGN_CONFIG.LIST_ID,
-                name: ACTIVE_CAMPAIGN_CONFIG.LIST_NAME,
-                added: addedToList
-            },
-            message: buildSuccessMessage({ success: tagApplied }, { success: addedToList })
+            message: tagApplied ? 
+                `Lead criado e tag "${ACTIVE_CAMPAIGN_CONFIG.TAG_NAME}" aplicada com sucesso!` :
+                `Lead criado com sucesso, mas houve problema ao aplicar a tag.`
         };
 
         console.log('🎉 Processo concluído:', result);

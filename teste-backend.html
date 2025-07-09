@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Backend ActiveCampaign</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-form { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .test-form input, .test-form button { 
+            display: block; width: 100%; margin: 10px 0; padding: 10px; 
+            border: 1px solid #ddd; border-radius: 4px; 
+        }
+        .test-form button { background: #007cba; color: white; cursor: pointer; }
+        .test-form button:hover { background: #005a87; }
+        .result { background: #fff; border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px; }
+        .success { border-color: #28a745; background-color: #d4edda; }
+        .error { border-color: #dc3545; background-color: #f8d7da; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste Backend ActiveCampaign Node.js</h1>
+    
+    <p><strong>Endpoint:</strong> <code>https://fasthomesac.fastsistemasconstrutivos.com.br/api/activecampaign-with-tag</code></p>
+    
+    <div class="test-form">
+        <h2>Teste de Status</h2>
+        <button onclick="testStatus()">Testar Status do Servidor</button>
+        <div id="statusResult"></div>
+    </div>
+
+    <div class="test-form">
+        <h2>Teste de Envio de Lead</h2>
+        <input type="text" id="testName" placeholder="Nome completo" value="Teste Usuario">
+        <input type="email" id="testEmail" placeholder="Email" value="teste@exemplo.com">
+        <input type="tel" id="testPhone" placeholder="Telefone" value="11999999999">
+        <input type="text" id="testUtmSource" placeholder="UTM Source" value="teste-frontend">
+        <button onclick="testLead()">Enviar Lead de Teste</button>
+        <div id="leadResult"></div>
+    </div>
+
+    <script>
+        async function testStatus() {
+            const resultDiv = document.getElementById('statusResult');
+            resultDiv.innerHTML = '<p>🔄 Testando status do servidor...</p>';
+            
+            try {
+                const response = await fetch('https://fasthomesac.fastsistemasconstrutivos.com.br/api/test');
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="result success">
+                        <h3>✅ Servidor Online!</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Erro ao conectar</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                        <p><strong>Possíveis causas:</strong></p>
+                        <ul>
+                            <li>Servidor Node.js não está rodando</li>
+                            <li>Porta incorreta ou bloqueada</li>
+                            <li>CORS não configurado</li>
+                            <li>URL incorreta</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+
+        async function testLead() {
+            const resultDiv = document.getElementById('leadResult');
+            resultDiv.innerHTML = '<p>🔄 Enviando lead de teste...</p>';
+            
+            const leadData = {
+                name: document.getElementById('testName').value,
+                email: document.getElementById('testEmail').value,
+                phone: document.getElementById('testPhone').value,
+                utm_source: document.getElementById('testUtmSource').value,
+                utm_medium: 'teste',
+                utm_campaign: 'teste-backend',
+                page_referrer: 'Teste manual'
+            };
+
+            try {
+                const response = await fetch('https://fasthomesac.fastsistemasconstrutivos.com.br/api/activecampaign-with-tag', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(leadData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <h3>✅ Lead Enviado com Sucesso!</h3>
+                            <p><strong>Contato ID:</strong> ${result.contact?.id}</p>
+                            <p><strong>Email:</strong> ${result.contact?.email}</p>
+                            <p><strong>Tag aplicada:</strong> ${result.tag?.applied ? 'SIM' : 'NÃO'}</p>
+                            <p><strong>Tag ID:</strong> ${result.tag?.id}</p>
+                            <p><strong>Mensagem:</strong> ${result.message}</p>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <h3>⚠️ Erro no Processamento</h3>
+                            <p><strong>Erro:</strong> ${result.error || result.message}</p>
+                            <pre>${JSON.stringify(result, null, 2)}</pre>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <h3>❌ Erro de Conexão</h3>
+                        <p><strong>Erro:</strong> ${error.message}</p>
+                        <p><strong>Dados enviados:</strong></p>
+                        <pre>${JSON.stringify(leadData, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        // Testar status automaticamente ao carregar
+        window.onload = function() {
+            testStatus();
+        };
+    </script>
+</body>
+</html>

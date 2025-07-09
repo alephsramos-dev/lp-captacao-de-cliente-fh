@@ -42,7 +42,9 @@ class FastHomesForm {
         this.addInputAnimations();
         this.validateAll();
         console.log('Fast Homes High Ticket Form initialized');
-        console.log("***** Integração TRIPLA INICIADA: PipeRun + ActiveCampaign + Google Apps Script ***********");
+        console.log("***** Integração TRIPLA: PipeRun + ActiveCampaign (via servidor Node.js) + Google Apps Script ***********");
+        console.log("🔗 ActiveCampaign: Usando servidor Node.js em fasthomesac.fastsistemasconstrutivos.com.br");
+        console.log("🏷️ Tag automática: catalogo-fast-homes-solicitado");
     }
 
     setupActiveCampaignCallback() {
@@ -371,7 +373,7 @@ class FastHomesForm {
                     throw err;
                 });
 
-            // 2. ENVIAR PARA ACTIVECAMPAIGN (método híbrido: proc.php + tag API)
+            // 2. ENVIAR PARA ACTIVECAMPAIGN (via servidor backend com tag 'catalogo-fast-homes-solicitado')
             await this.sendToActiveCampaignWithTag();
 
             // 3. ENVIAR PARA GOOGLE APPS SCRIPT
@@ -484,80 +486,76 @@ class FastHomesForm {
     }
 
     async sendToActiveCampaignWithTag() {
-        console.log("🔄 Enviando para ActiveCampaign com aplicação de tag...");
+        console.log("🔄 Enviando para ActiveCampaign via servidor Node.js...");
 
-        // 1. PRIMEIRO: Enviar via proc.php (método que funciona)
-        this.sendToActiveCampaign();
+        try {
+            // Preparar dados do contato
+            const name = this.nameInput.value.trim();
+            const email = this.emailInput.value.trim();
+            const phone = this.phoneInput.value.replace(/\D/g, '');
 
-        // 2. SEGUNDO: Aplicar tag via API (se configurada)
-        const config = window.ACTIVE_CAMPAIGN_CONFIG;
-        if (config.API_KEY) {
-            try {
-                console.log("🎯 Aplicando tag via API...");
+            // Capturar UTMs da URL
+            const p = new URLSearchParams(window.location.search);
+            const utm_source = p.get("utm_source") || "organico";
+            const utm_medium = p.get("utm_medium") || "";
+            const utm_campaign = p.get("utm_campaign") || "";
+            const utm_content = p.get("utm_content") || "";
+            const utm_term = p.get("utm_term") || "";
 
-                // Aguardar um pouco para o contato ser criado via proc.php
-                await new Promise(resolve => setTimeout(resolve, 2000));
+            // Dados para envio ao servidor backend Node.js
+            const contactData = {
+                name: name,  // Enviando nome completo como esperado pelo backend
+                email: email,
+                phone: phone,
+                utm_source: utm_source,
+                utm_medium: utm_medium,
+                utm_campaign: utm_campaign,
+                utm_content: utm_content,
+                utm_term: utm_term,
+                page_referrer: document.referrer || 'Direct access'
+            };
 
-                const tagManager = new window.ActiveCampaignTagManager(config);
+            console.log("📤 Enviando dados para servidor Node.js:", contactData);
 
-                // Dados do contato atual
-                const contactData = {
-                    email: this.emailInput.value,
-                    firstName: this.nameInput.value.split(' ')[0] || '',
-                    lastName: this.nameInput.value.split(' ').slice(1).join(' ') || '',
-                    phone: this.phoneInput.value
-                };
+            // Enviar para o servidor backend Node.js
+            const response = await fetch('https://fasthomesac.fastsistemasconstrutivos.com.br/api/activecampaign-with-tag', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(contactData)
+            });
 
-                // Aplicar a tag
-                const result = await tagManager.processContactWithTag(
-                    contactData,
-                    config.TAG_NAME,
-                    'Tag aplicada automaticamente após envio do formulário'
-                );
-
-                if (result.success) {
-                    console.log(`✅ Tag "${config.TAG_NAME}" aplicada com sucesso!`);
-                    console.log(`👤 Contato: ${contactData.email} (ID: ${result.contact.id})`);
-                } else {
-                    console.warn(`⚠️ Falha ao aplicar tag: ${result.error}`);
-                }
-
-            } catch (error) {
-                console.warn("⚠️ Erro ao aplicar tag via API (contato foi criado via proc.php):", error.message);
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
             }
-        } else {
-            console.log("📝 API_KEY não configurada - tag não aplicada automaticamente");
-            console.log("💡 Configure API_KEY em config.js para aplicação automática de tags");
+
+            const result = await response.json();
+            
+            if (result.success) {
+                console.log(`✅ ActiveCampaign: ${result.message}`);
+                console.log(`👤 Email: ${email} - Tag aplicada: ${result.tag?.applied ? 'SIM' : 'NÃO'}`);
+                if (result.contact?.id) {
+                    console.log(`🆔 ID do contato: ${result.contact.id}`);
+                }
+                if (result.tag?.id) {
+                    console.log(`🏷️ ID da tag: ${result.tag.id} (${result.tag.name})`);
+                }
+            } else {
+                console.warn(`⚠️ Aviso do servidor: ${result.message || result.error || 'Resposta inesperada'}`);
+            }
+
+        } catch (error) {
+            console.error("❌ Erro ao enviar para ActiveCampaign via servidor backend:", error);
+            
+            // Fallback: tentar método proc.php como backup
+            console.log("� Tentando método de fallback (proc.php)...");
+            this.sendToActiveCampaignFallback();
         }
     }
 
-    sendToActiveCampaign() {
-        // Usar o método proc.php que funciona (contorna CORS)
-        const serialized = this.formSerialize(this.form).replace(/%0A/g, "\\n");
-        const url = "https://fastdrywall80017.activehosted.com/proc.php?" + serialized + "&jsonp=true";
 
-        console.log("📤 Enviando dados para ActiveCampaign:", url);
-
-        if (typeof window._load_script === "function") {
-            window._load_script(url, null, true);
-            console.log("✅ ActiveCampaign: Usando _load_script nativo");
-        } else {
-            const script = document.createElement("script");
-            script.src = url;
-            script.async = true;
-            script.onload = () => {
-                console.log("✅ ActiveCampaign: Script proc.php carregado com sucesso");
-            };
-            script.onerror = (error) => {
-                console.error("❌ ActiveCampaign: Falha ao carregar script proc.php");
-                console.error("🔍 URL tentada:", url);
-                console.error("📝 Isso pode indicar problema de CORS ou conectividade");
-                console.error("💡 O contato pode ter sido criado mesmo com este erro");
-            };
-            document.head.appendChild(script);
-            console.log("📤 ActiveCampaign: Script proc.php enviado");
-        }
-    }
 
     formSerialize(form) {
         if (!form || form.nodeName !== "FORM") return "";
@@ -610,152 +608,6 @@ class FastHomesForm {
 
         const img = new Image();
         img.src = url;
-    } async submitToActiveCampaign(payload) {
-        const config = window.ACTIVE_CAMPAIGN_CONFIG;
-        const lead = payload.leads[0];
-
-        // Verificar se a API Key está configurada
-        if (!config.API_KEY) {
-            console.log('⚠️ API_KEY não configurada - usando método de fallback');
-            return this.activeCampaignFallback(lead, config);
-        }
-
-        // Tentar integração direta com o TagManager
-        try {
-            console.log('🔄 Tentando integração direta com Active Campaign...');
-
-            // Inicializar o TagManager
-            const tagManager = new window.ActiveCampaignTagManager(config);
-
-            // Preparar dados do contato
-            const nameParts = lead.name.split(' ');
-            const contactData = {
-                email: lead.email,
-                firstName: nameParts[0] || '',
-                lastName: nameParts.slice(1).join(' ') || '',
-                phone: lead.personal_phone,
-                fieldValues: []
-            };
-
-            // Adicionar campos UTM apenas se preenchidos
-            const utmMapping = {
-                utm_source: config.CUSTOM_FIELDS.UTM_SOURCE,
-                utm_medium: config.CUSTOM_FIELDS.UTM_MEDIUM,
-                utm_campaign: config.CUSTOM_FIELDS.UTM_CAMPAIGN,
-                utm_content: config.CUSTOM_FIELDS.UTM_CONTENT,
-                utm_term: config.CUSTOM_FIELDS.UTM_TERM
-            };
-
-            Object.entries(utmMapping).forEach(([utmKey, fieldId]) => {
-                const value = lead.custom_fields[utmKey];
-                if (value && value.trim() && fieldId) {
-                    contactData.fieldValues.push({
-                        field: fieldId,
-                        value: value
-                    });
-                }
-            });
-
-            // Processar contato e aplicar tag
-            const result = await tagManager.processContactWithTag(
-                contactData,
-                config.TAG_NAME,
-                'Tag aplicada automaticamente ao solicitar catálogo Fast Homes'
-            );
-
-            if (result.success) {
-                console.log('✅ Active Campaign: Integração direta realizada com sucesso!');
-                console.log(`🎯 Tag "${config.TAG_NAME}" aplicada ao contato ${lead.email}`);
-
-                return {
-                    success: true,
-                    method: 'direct_integration_with_tag',
-                    contactId: result.contact.id,
-                    tagId: result.tagId,
-                    note: `Lead enviado diretamente para Active Campaign com tag "${config.TAG_NAME}"`
-                };
-            } else {
-                throw new Error(result.error || 'Falha no processamento');
-            }
-
-        } catch (error) {
-            console.log('⚠️ Integração direta falhou (CORS ou outro erro), usando fallback...');
-            console.log('Erro:', error.message);
-
-            return this.activeCampaignFallback(lead, config);
-        }
-    }
-
-    activeCampaignFallback(lead, config) {
-        // FALLBACK: Preparar dados para integração posterior via Pipe.run
-        lead.custom_fields.active_campaign_data = JSON.stringify({
-            base_url: config.BASE_URL,
-            tag_name: config.TAG_NAME,
-            tag_id: config.TAG_ID,
-            fields_mapping: config.CUSTOM_FIELDS,
-            contact_data: {
-                email: lead.email,
-                firstName: lead.name.split(' ')[0],
-                lastName: lead.name.split(' ').slice(1).join(' '),
-                phone: lead.personal_phone
-            },
-            utm_fields: {
-                utm_source: lead.custom_fields.utm_source,
-                utm_medium: lead.custom_fields.utm_medium,
-                utm_campaign: lead.custom_fields.utm_campaign,
-                utm_content: lead.custom_fields.utm_content,
-                utm_term: lead.custom_fields.utm_term
-            }
-        });
-
-        // Marcar para integração posterior
-        lead.custom_fields.integration_target = 'active_campaign';
-        lead.custom_fields.ac_tag = config.TAG_NAME;
-        lead.custom_fields.integration_status = 'pending_cors_workaround';
-
-        console.log('📋 Dados estruturados para Active Campaign incluídos no Pipe.run');
-        console.log('🔗 Para integração automática, configure um webhook ou automação');
-
-        return {
-            success: true,
-            method: 'pipe_run_fallback',
-            note: 'Dados preparados para integração posterior (CORS bloqueado)'
-        };
-    }
-
-    async submitToAPI(payload) {
-        // Preparar dados para Active Campaign (incluído no Pipe.run devido ao CORS)
-        const activeCampaignResponse = await this.submitToActiveCampaign(payload);
-
-        // Enviar para Pipe.run (funciona normalmente)
-        const response = await fetch('https://app.pipe.run/webservice/integradorJson?hash=1e28b707-3c02-4393-bb9d-d3826b060dcd', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        console.log('✅ Pipe.run Response:', data);
-
-        // Mostrar status da integração
-        if (activeCampaignResponse.success) {
-            console.log('📋 Active Campaign: Dados preparados para integração');
-            console.log('🔗 Para ativar integração direta, consulte: SOLUCOES_CORS.md');
-        }
-
-        return {
-            success: true,
-            data,
-            activeCampaignResponse,
-            message: 'Enviado com sucesso! Consulte SOLUCOES_CORS.md para integração direta com Active Campaign.'
-        };
     }
 
     handleSubmitSuccess() {
@@ -933,6 +785,49 @@ class FastHomesForm {
                 setTimeout(() => message.remove(), 300);
             }
         }, 5000);
+    }
+
+    sendToActiveCampaignFallback() {
+        console.log("🔄 Usando método de fallback (proc.php) para ActiveCampaign...");
+        
+        // Adicionar campos necessários ao formulário
+        const config = window.ACTIVE_CAMPAIGN_CONFIG;
+        
+        // Capturar UTMs da URL
+        const p = new URLSearchParams(window.location.search);
+        const utmData = {
+            utm_source: p.get("utm_source") || "organico",
+            utm_medium: p.get("utm_medium") || "",
+            utm_campaign: p.get("utm_campaign") || "",
+            utm_content: p.get("utm_content") || "",
+            utm_term: p.get("utm_term") || "",
+            page_referrer: document.referrer || window.location.href
+        };
+
+        // Adicionar campos UTM como campos ocultos no formulário
+        this.addHiddenFieldsToForm(utmData);
+
+        // Usar o método proc.php como fallback
+        const serialized = this.formSerialize(this.form).replace(/%0A/g, "\\n");
+        const url = "https://fastdrywall80017.activehosted.com/proc.php?" + serialized + "&jsonp=true";
+
+        console.log("📤 Fallback: Enviando dados para ActiveCampaign proc.php:", url);
+
+        if (typeof window._load_script === "function") {
+            window._load_script(url, null, true);
+            console.log("✅ ActiveCampaign fallback: Usando _load_script nativo");
+        } else {
+            const script = document.createElement("script");
+            script.src = url;
+            script.async = true;
+            script.onload = () => {
+                console.log("✅ ActiveCampaign fallback: Script proc.php carregado com sucesso");
+            };
+            script.onerror = (error) => {
+                console.error("❌ ActiveCampaign fallback: Falha ao carregar script proc.php");
+            };
+            document.head.appendChild(script);
+        }
     }
 }
 
