@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demonstração - Ícones SVG de Validação</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .demo-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        
+        .form-group input.valid {
+            border-color: #10b981;
+            background-color: #f0fdf4;
+        }
+        
+        .form-group input.invalid {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        
+        .validation-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-50%) scale(0.8);
+        }
+        
+        .validation-icon.valid {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+            animation: validationSuccess 0.4s ease-out;
+        }
+        
+        .validation-icon.invalid {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+            animation: validationError 0.4s ease-out;
+        }
+        
+        .validation-icon svg {
+            transition: all 0.2s ease;
+        }
+        
+        .validation-icon.valid svg {
+            filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.3));
+        }
+        
+        .validation-icon.invalid svg {
+            filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.3));
+        }
+        
+        @keyframes validationSuccess {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5) rotate(-180deg);
+            }
+            50% {
+                transform: translateY(-50%) scale(1.1) rotate(-90deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) scale(1) rotate(0deg);
+            }
+        }
+        
+        @keyframes validationError {
+            0% {
+                opacity: 0;
+                transform: translateY(-50%) scale(0.5) rotate(180deg);
+            }
+            50% {
+                transform: translateY(-50%) scale(1.1) rotate(90deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(-50%) scale(1) rotate(0deg);
+            }
+        }
+        
+        .demo-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: center;
+        }
+        
+        .demo-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        
+        .demo-button.success {
+            background: #10b981;
+            color: white;
+        }
+        
+        .demo-button.error {
+            background: #ef4444;
+            color: white;
+        }
+        
+        .demo-button.clear {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .icon-showcase {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+        
+        .icon-demo {
+            text-align: center;
+        }
+        
+        .icon-demo h3 {
+            margin: 10px 0 5px 0;
+            color: #4a5568;
+        }
+        
+        .icon-demo p {
+            margin: 0;
+            color: #718096;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <h1>🎨 Ícones SVG de Validação</h1>
+        
+        <div class="icon-showcase">
+            <div class="icon-demo">
+                <div class="validation-icon valid">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="11" fill="#10b981" stroke="#059669" stroke-width="1"/>
+                        <path d="M8 12.5l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Válido</h3>
+                <p>Campo preenchido corretamente</p>
+            </div>
+            
+            <div class="icon-demo">
+                <div class="validation-icon invalid">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="11" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+                        <path d="M15 9l-6 6m0-6l6 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h3>Inválido</h3>
+                <p>Campo com erro de validação</p>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="testEmail">Email (teste interativo)</label>
+            <input type="email" id="testEmail" placeholder="Digite um email...">
+            <div class="validation-icon" id="testEmailIcon"></div>
+        </div>
+        
+        <div class="form-group">
+            <label for="testName">Nome (teste interativo)</label>
+            <input type="text" id="testName" placeholder="Digite um nome...">
+            <div class="validation-icon" id="testNameIcon"></div>
+        </div>
+        
+        <div class="demo-buttons">
+            <button class="demo-button success" onclick="showValidIcon()">Mostrar Válido</button>
+            <button class="demo-button error" onclick="showInvalidIcon()">Mostrar Inválido</button>
+            <button class="demo-button clear" onclick="clearIcons()">Limpar</button>
+        </div>
+    </div>
+
+    <script>
+        // Função para mostrar ícone válido
+        function showValidIcon() {
+            const email = document.getElementById('testEmail');
+            const emailIcon = document.getElementById('testEmailIcon');
+            
+            email.classList.remove('invalid');
+            email.classList.add('valid');
+            emailIcon.classList.remove('invalid');
+            emailIcon.classList.add('valid');
+            
+            emailIcon.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="11" fill="#10b981" stroke="#059669" stroke-width="1"/>
+                    <path d="M8 12.5l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            `;
+        }
+        
+        // Função para mostrar ícone inválido
+        function showInvalidIcon() {
+            const name = document.getElementById('testName');
+            const nameIcon = document.getElementById('testNameIcon');
+            
+            name.classList.remove('valid');
+            name.classList.add('invalid');
+            nameIcon.classList.remove('valid');
+            nameIcon.classList.add('invalid');
+            
+            nameIcon.innerHTML = `
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="11" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+                    <path d="M15 9l-6 6m0-6l6 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            `;
+        }
+        
+        // Função para limpar ícones
+        function clearIcons() {
+            const inputs = document.querySelectorAll('input');
+            const icons = document.querySelectorAll('.validation-icon');
+            
+            inputs.forEach(input => {
+                input.classList.remove('valid', 'invalid');
+                input.value = '';
+            });
+            
+            icons.forEach(icon => {
+                icon.classList.remove('valid', 'invalid');
+                icon.innerHTML = '';
+            });
+        }
+        
+        // Validação em tempo real para demonstração
+        document.getElementById('testEmail').addEventListener('input', function() {
+            const email = this.value;
+            const icon = document.getElementById('testEmailIcon');
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            
+            if (email.length > 0) {
+                if (emailRegex.test(email)) {
+                    this.classList.remove('invalid');
+                    this.classList.add('valid');
+                    icon.classList.remove('invalid');
+                    icon.classList.add('valid');
+                    icon.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="11" fill="#10b981" stroke="#059669" stroke-width="1"/>
+                            <path d="M8 12.5l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    `;
+                } else {
+                    this.classList.remove('valid');
+                    this.classList.add('invalid');
+                    icon.classList.remove('valid');
+                    icon.classList.add('invalid');
+                    icon.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="11" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+                            <path d="M15 9l-6 6m0-6l6 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    `;
+                }
+            } else {
+                this.classList.remove('valid', 'invalid');
+                icon.classList.remove('valid', 'invalid');
+                icon.innerHTML = '';
+            }
+        });
+        
+        document.getElementById('testName').addEventListener('input', function() {
+            const name = this.value.trim();
+            const icon = document.getElementById('testNameIcon');
+            
+            if (name.length > 0) {
+                if (name.length >= 2) {
+                    this.classList.remove('invalid');
+                    this.classList.add('valid');
+                    icon.classList.remove('invalid');
+                    icon.classList.add('valid');
+                    icon.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="11" fill="#10b981" stroke="#059669" stroke-width="1"/>
+                            <path d="M8 12.5l3 3 5-5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    `;
+                } else {
+                    this.classList.remove('valid');
+                    this.classList.add('invalid');
+                    icon.classList.remove('valid');
+                    icon.classList.add('invalid');
+                    icon.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="11" fill="#ef4444" stroke="#dc2626" stroke-width="1"/>
+                            <path d="M15 9l-6 6m0-6l6 6" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    `;
+                }
+            } else {
+                this.classList.remove('valid', 'invalid');
+                icon.classList.remove('valid', 'invalid');
+                icon.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>

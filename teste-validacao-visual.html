@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste - Validação Visual (Sem Ícones)</title>
+    <link rel="stylesheet" href="src/style.css">
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            padding: 2rem;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 2rem;
+        }
+        .test-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .test-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        .test-btn.valid {
+            background: #22c55e;
+            color: white;
+        }
+        .test-btn.valid:hover {
+            background: #16a34a;
+        }
+        .test-btn.invalid {
+            background: #ef4444;
+            color: white;
+        }
+        .test-btn.invalid:hover {
+            background: #dc2626;
+        }
+        .test-btn.clear {
+            background: #6b7280;
+            color: white;
+        }
+        .test-btn.clear:hover {
+            background: #4b5563;
+        }
+        .info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            color: #1e40af;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Teste de Validação Visual</h1>
+        
+        <div class="info">
+            <strong>Instruções:</strong><br>
+            • Digite nos campos e veja o efeito visual<br>
+            • Use os botões para simular estados de validação<br>
+            • Não há mais ícones - apenas cores de borda e background
+        </div>
+
+        <form class="contact-form">
+            <div class="form-group">
+                <label for="testName">Nome completo</label>
+                <div>
+                    <input type="text" id="testName" placeholder="Digite seu nome completo">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="testEmail">E-mail</label>
+                <div>
+                    <input type="email" id="testEmail" placeholder="seu@email.com">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="testPhone">Telefone</label>
+                <div>
+                    <input type="tel" id="testPhone" placeholder="(00) 00000-0000">
+                </div>
+            </div>
+
+            <div class="test-buttons">
+                <button type="button" class="test-btn valid" onclick="setValidState()">✅ Estado Válido</button>
+                <button type="button" class="test-btn invalid" onclick="setInvalidState()">❌ Estado Inválido</button>
+                <button type="button" class="test-btn clear" onclick="clearStates()">🔄 Limpar Estados</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function setValidState() {
+            const inputs = ['testName', 'testEmail', 'testPhone'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = getTestValue(id);
+                input.classList.remove('invalid');
+                input.classList.add('valid');
+            });
+        }
+
+        function setInvalidState() {
+            const inputs = ['testName', 'testEmail', 'testPhone'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = 'x';
+                input.classList.remove('valid');
+                input.classList.add('invalid');
+            });
+        }
+
+        function clearStates() {
+            const inputs = ['testName', 'testEmail', 'testPhone'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.value = '';
+                input.classList.remove('valid', 'invalid');
+            });
+        }
+
+        function getTestValue(id) {
+            switch(id) {
+                case 'testName': return 'João da Silva';
+                case 'testEmail': return 'joao@email.com';
+                case 'testPhone': return '(11) 99999-9999';
+                default: return 'teste';
+            }
+        }
+
+        // Adicionar eventos de input para validação em tempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('input');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    // Remove estados anteriores
+                    this.classList.remove('valid', 'invalid');
+                    
+                    // Se tem valor, simula validação
+                    if (this.value.trim()) {
+                        if (isValidInput(this)) {
+                            this.classList.add('valid');
+                        } else {
+                            this.classList.add('invalid');
+                        }
+                    }
+                });
+            });
+        });
+
+        function isValidInput(input) {
+            const value = input.value.trim();
+            
+            switch(input.type) {
+                case 'email':
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+                case 'tel':
+                    return value.length >= 10;
+                default:
+                    return value.length >= 2;
+            }
+        }
+    </script>
+</body>
+</html>

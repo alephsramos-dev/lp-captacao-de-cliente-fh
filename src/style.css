@@ -299,60 +299,7 @@ body {
     background: rgba(239, 68, 68, 0.02);
 }
 
-/* Validation Icons */
-.validation-icon {
-    font-size: 1rem;
-    opacity: 0;
-    transition: var(--transition);
-    position: absolute;
-    right: 20px;
-}
 
-.validation-icon.valid {
-    color: var(--success-color);
-    opacity: 1;
-    transform: scale(1);
-    animation: bounceIn 0.4s ease-out;
-}
-
-.validation-icon.invalid {
-    color: var(--danger-color);
-    opacity: 1;
-    transform: scale(1);
-    animation: shakeX 0.4s ease-out;
-}
-
-@keyframes bounceIn {
-    0% {
-        transform: scale(0.5);
-        opacity: 0;
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-@keyframes shakeX {
-
-    0%,
-    100% {
-        transform: translateX(0);
-    }
-
-    25% {
-        transform: translateX(-4px);
-    }
-
-    75% {
-        transform: translateX(4px);
-    }
-}
 
 /* Submit Button - Premium Design */
 .submit-button {

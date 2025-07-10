@@ -2,19 +2,18 @@
 
 ## ✅ CONFIGURAÇÃO ATUALIZADA
 
-O servidor está configurado em **Node.js** no domínio:
-**https://fasthomesac.fastsistemasconstrutivos.com.br**
-
-## � CONFIGURAÇÃO ATUAL
-
-# Instruções para Servidor Backend Node.js ActiveCampaign
-
-## ✅ CONFIGURAÇÃO ATUALIZADA
-
 O servidor Node.js está configurado no domínio:
 **https://fasthomesac.fastsistemasconstrutivos.com.br/api/activecampaign-with-tag**
 
-## 🔧 CONFIGURAÇÃO ATUAL
+## 🎨 INTERFACE ATUAL
+
+### Validação Visual Simplificada:
+- ❌ **Removidos:** Ícones de validação (Font Awesome/SVG)
+- ✅ **Mantido:** Efeito visual apenas com cores de borda/background
+- 🎯 **Estados:** Verde para válido, vermelho para inválido
+- 🧹 **Clean:** Interface mais limpa e moderna
+
+## 🔧 CONFIGURAÇÃO TÉCNICA
 
 ### JavaScript atualizado para:
 - **URL:** `https://fasthomesac.fastsistemasconstrutivos.com.br/api/activecampaign-with-tag`

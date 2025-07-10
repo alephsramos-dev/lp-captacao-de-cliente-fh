@@ -227,18 +227,14 @@ class FastHomesForm {
 
     updateValidation(field, isValid) {
         const input = document.getElementById(field);
-        const icon = document.getElementById(field + 'Icon');
 
         input.classList.remove('valid', 'invalid');
-        icon.classList.remove('fa-check', 'fa-times', 'valid', 'invalid');
 
         if (input.value.trim() !== '') {
             if (isValid) {
                 input.classList.add('valid');
-                icon.classList.add('fa-check', 'valid');
             } else {
                 input.classList.add('invalid');
-                icon.classList.add('fa-times', 'invalid');
             }
         }
 
@@ -247,10 +243,8 @@ class FastHomesForm {
 
     clearValidation(field) {
         const input = document.getElementById(field);
-        const icon = document.getElementById(field + 'Icon');
 
         input.classList.remove('valid', 'invalid');
-        icon.classList.remove('fa-check', 'fa-times', 'valid', 'invalid');
 
         this.updateSubmitButton();
     }
@@ -851,7 +845,7 @@ const additionalStyles = `
     }
     
     .submit-button.ready {
-        background: linear-gradient(135deg, var(--accent-color), #f59e0b);
+        background: linear-gradient(135deg, var(--accent-color), #1d1d1d);
         box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
     }
 `;
